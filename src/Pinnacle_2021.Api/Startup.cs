@@ -16,6 +16,7 @@ using Newtonsoft.Json.Serialization;
 
 using Pinnacle_2021.Api.DAL;
 using Pinnacle_2021.Api.Services.Domain;
+using Pinnacle_2021.Api.Services.Domain.Recipe;
 
 namespace Pinnacle_2021.Api
 {
@@ -45,6 +46,7 @@ namespace Pinnacle_2021.Api
 
 			services.AddSingleton<IUpcApiClient, UpcApiClient>();
 			services.AddSingleton<IImageApiClient, ImageApiClient>();
+			services.AddSingleton<IRecipeService, RecipeService>();
 		}
 
 		#region Configure

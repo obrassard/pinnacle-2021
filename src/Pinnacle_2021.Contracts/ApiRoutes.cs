@@ -4,6 +4,14 @@
 	{
 		public const string ROOT = "api";
 
+		public static class Recipe
+		{
+			public const string SEGMENT = "/recipes";
+			public const string BASE_ROUTE = ROOT + SEGMENT;
+
+			public const string GET = BASE_ROUTE;
+		}
+
 		public static class Inventories
 		{
 			public const string SEGMENT = "/inventories";

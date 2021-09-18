@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 
 using Pinnacle_2021.Api.DAL;
+using Pinnacle_2021.Api.Services.Domain;
 
 namespace Pinnacle_2021.Api
 {
@@ -33,6 +34,12 @@ namespace Pinnacle_2021.Api
 			ConfigureControllers(services);
 			ConfigurePackages(services);
 			ConfigureDataBase(services);
+			ConfigureDomainServices(services);
+		}
+
+		private void ConfigureDomainServices(IServiceCollection services)
+		{
+			services.AddScoped<IUserService, UserService>();
 		}
 
 		#region Configure
@@ -111,13 +118,30 @@ namespace Pinnacle_2021.Api
 			if (env.IsDevelopment())
 			{
 				app.UseDeveloperExceptionPage();
-				app.UseSwagger();
-				app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pinnacle_2021.Api v1"));
 			}
+			else
+			{
+				app.UseExceptionHandler(appBuilder =>
+				{
+					appBuilder.Run(async context =>
+					{
+						context.Response.StatusCode = 500;
+						await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+					});
+				});
+			}
+			app.UseSwagger();
+			app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Pinnacle_2021.Api v1"));
 
 			app.UseHttpsRedirection();
 
 			app.UseRouting();
+
+			app.UseCors(x => x
+				.AllowAnyMethod()
+				.AllowAnyHeader()
+				.SetIsOriginAllowed(origin => true) // allow any origin
+				.AllowCredentials()); // allow credentials
 
 			app.UseAuthorization();
 

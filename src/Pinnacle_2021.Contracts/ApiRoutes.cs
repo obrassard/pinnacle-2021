@@ -4,9 +4,10 @@
 	{
 		public const string ROOT = "api";
 
-		public static class Test
+		public static class Users
 		{
-			public const string GET = ROOT + "/test";
+			public const string BASE_ROUTE = ROOT + "/users";
+			public const string CREATE = BASE_ROUTE;
 		}
 	}
 }

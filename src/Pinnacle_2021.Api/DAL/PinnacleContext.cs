@@ -1,7 +1,7 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 
-using Pinnacle_2021.Api.Models;
+using Pinnacle_2021.Api.Entities;
 
 namespace Pinnacle_2021.Api.DAL
 {

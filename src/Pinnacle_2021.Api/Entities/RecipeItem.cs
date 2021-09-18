@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 using Pinnacle_2021.Api.Models.Base;
 
-namespace Pinnacle_2021.Api.Models
+namespace Pinnacle_2021.Api.Entities
 {
 	[Table("RecipeItem")]
 	public class RecipeItem : BaseEntityWithKey

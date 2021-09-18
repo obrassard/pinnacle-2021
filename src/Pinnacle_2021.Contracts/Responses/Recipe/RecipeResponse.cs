@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace Pinnacle_2021.Contracts.Responses.Recipe
 {
 	public record RecipeResponse(string label,
-		string image);
+		string image, string url, int calories, string[] mealType);
 }

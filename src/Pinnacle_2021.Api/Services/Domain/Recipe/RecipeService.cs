@@ -46,7 +46,7 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 				
 				foreach (var hit in response.Hits)
 				{
-					recipeList.Add(new RecipeResponse(hit.Recipe.Label, hit.Recipe.Image));
+					recipeList.Add(new RecipeResponse(hit.Recipe.Label, hit.Recipe.Image, hit.Recipe.Url, (int)hit.Recipe.Calories, hit.Recipe.MealType));
 				}
 
 				return recipeList;

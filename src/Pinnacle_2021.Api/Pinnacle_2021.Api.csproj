@@ -4,10 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
     <RootNamespace>Pinnacle_2021.Api</RootNamespace>
     <UserSecretsId>2f2b764d-0d60-4726-b5ec-748541a0019c</UserSecretsId>
+		<LangVersion>9</LangVersion>
+		<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.10">
@@ -22,6 +25,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="OneOf" Version="3.0.190" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
+    <PackageReference Include="Unsplash.Net" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pinnacle_2021.Api.DAL;
 
 namespace Pinnacle_2021.Api.Migrations
 {
     [DbContext(typeof(PinnacleContext))]
-    partial class PinnacleContextModelSnapshot : ModelSnapshot
+    [Migration("20210918043157_CreateBasicEntities")]
+    partial class CreateBasicEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -19,7 +21,7 @@ namespace Pinnacle_2021.Api.Migrations
                 .HasAnnotation("ProductVersion", "5.0.10")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Inventory", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Inventory", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,11 +48,16 @@ namespace Pinnacle_2021.Api.Migrations
                     b.ToTable("Inventory");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.InventoryItem", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.InventoryItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Consumed")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -81,7 +88,7 @@ namespace Pinnacle_2021.Api.Migrations
                     b.ToTable("InventoryItem");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Item", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Item", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -93,14 +100,10 @@ namespace Pinnacle_2021.Api.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("QuantityInPackage")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(1);
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -119,7 +122,7 @@ namespace Pinnacle_2021.Api.Migrations
                     b.ToTable("Item");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Recipe", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Recipe", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -146,7 +149,7 @@ namespace Pinnacle_2021.Api.Migrations
                     b.ToTable("Recipe");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.RecipeItem", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.RecipeItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -176,7 +179,7 @@ namespace Pinnacle_2021.Api.Migrations
                     b.ToTable("RecipeItem");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.User", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -213,9 +216,9 @@ namespace Pinnacle_2021.Api.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Inventory", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Inventory", b =>
                 {
-                    b.HasOne("Pinnacle_2021.Api.Entities.User", "User")
+                    b.HasOne("Pinnacle_2021.Api.Models.User", "User")
                         .WithMany("Inventories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -224,15 +227,15 @@ namespace Pinnacle_2021.Api.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.InventoryItem", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.InventoryItem", b =>
                 {
-                    b.HasOne("Pinnacle_2021.Api.Entities.Inventory", "Inventory")
+                    b.HasOne("Pinnacle_2021.Api.Models.Inventory", "Inventory")
                         .WithMany("InventoryItems")
                         .HasForeignKey("InventoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Pinnacle_2021.Api.Entities.Item", "Item")
+                    b.HasOne("Pinnacle_2021.Api.Models.Item", "Item")
                         .WithMany("InventorieItems")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -243,24 +246,24 @@ namespace Pinnacle_2021.Api.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Item", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Item", b =>
                 {
-                    b.HasOne("Pinnacle_2021.Api.Entities.Item", "ChildItem")
+                    b.HasOne("Pinnacle_2021.Api.Models.Item", "ChildItem")
                         .WithMany()
                         .HasForeignKey("ChildItemId");
 
                     b.Navigation("ChildItem");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.RecipeItem", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.RecipeItem", b =>
                 {
-                    b.HasOne("Pinnacle_2021.Api.Entities.Item", "Item")
+                    b.HasOne("Pinnacle_2021.Api.Models.Item", "Item")
                         .WithMany("RecipeItems")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Pinnacle_2021.Api.Entities.Recipe", "Recipe")
+                    b.HasOne("Pinnacle_2021.Api.Models.Recipe", "Recipe")
                         .WithMany("RecipeItems")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -271,24 +274,24 @@ namespace Pinnacle_2021.Api.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Inventory", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Inventory", b =>
                 {
                     b.Navigation("InventoryItems");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Item", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Item", b =>
                 {
                     b.Navigation("InventorieItems");
 
                     b.Navigation("RecipeItems");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.Recipe", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.Recipe", b =>
                 {
                     b.Navigation("RecipeItems");
                 });
 
-            modelBuilder.Entity("Pinnacle_2021.Api.Entities.User", b =>
+            modelBuilder.Entity("Pinnacle_2021.Api.Models.User", b =>
                 {
                     b.Navigation("Inventories");
                 });

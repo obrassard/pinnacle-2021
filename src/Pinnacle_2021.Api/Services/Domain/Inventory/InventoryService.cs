@@ -34,11 +34,32 @@ namespace Pinnacle_2021.Api.Services.Domain
 			return inventories;
 		}
 
+		public async Task<InventoryDetailResponse> Get(Guid inventoryId, bool includeExpiredItems = false)
+		{
+			var title = await Context.Inventories.Where(i => i.Id == inventoryId).Select(i => i.Title).FirstOrDefaultAsync();
+
+			var items = await Context.Items.Where(ii => ii.InventorieItems.Any(c => c.InventoryId == inventoryId))
+											.Select(ii => new ItemListResponse
+											{
+												Title = ii.Title,
+												Image = ii.Image,
+												ItemId = ii.Id,
+												Count = ii.InventorieItems.Where(i => i.InventoryId == inventoryId).Sum(i => i.Quantity)
+											}).ToListAsync();
+
+			return new InventoryDetailResponse
+			{
+				Title = title,
+				Items = items
+			};
+		}
+
 		#region Select
 		private Expression<Func<Inventory, InventoryResponse>> GetSelectInventories()
 		{
 			return i => new InventoryResponse
 			{
+				Id = i.Id,
 				Title = i.Title,
 				CountOfItems = i.InventoryItems.Count
 			};

@@ -29,6 +29,13 @@ namespace Pinnacle_2021.Api.Controllers
 			return Ok(await _inventoryService.GetAll(userId));
 		}
 
+
+		[HttpGet(ApiRoutes.Inventories.GET_BY_ID)]
+		public async Task<ActionResult<InventoryDetailResponse>> GetDetail(Guid inventoryId)
+		{
+			return Ok(await _inventoryService.Get(inventoryId));
+		}
+
 		#endregion
 
 		#region Post

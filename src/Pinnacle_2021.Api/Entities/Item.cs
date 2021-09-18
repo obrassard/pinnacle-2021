@@ -24,7 +24,6 @@ namespace Pinnacle_2021.Api.Entities
 		public virtual ICollection<RecipeItem> RecipeItems { get; set; }
 		public virtual ICollection<InventoryItem> InventorieItems { get; set; }
 
-
 		#endregion
 	}
 }

@@ -20,6 +20,16 @@ namespace Pinnacle_2021.Api.Controllers
 			_itemService = itemService;
 		}
 
+		#region Get
+
+		[HttpGet(ApiRoutes.Items.GET_BY_ID)]
+		public async Task<ActionResult<ItemDetailResponse>> GetProductDetail(Guid inventoryId, Guid itemId)
+		{
+			return Ok(await _itemService.GetItem(inventoryId, itemId));
+		}
+
+		#endregion
+
 		#region Post
 
 		[HttpPost(ApiRoutes.Items.ADD_TO_INVENTORY)]

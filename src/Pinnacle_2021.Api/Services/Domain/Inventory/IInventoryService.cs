@@ -9,6 +9,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 {
 	public interface IInventoryService
 	{
+		Task<InventoryDetailResponse> Get(Guid inventoryId, bool includeExpiredItems = false);
 		Task<IEnumerable<InventoryResponse>> GetAll(Guid userId);
 		Task<InventoryCreationResponse> Create(Guid userId, InventoryForCreation request);
 	}

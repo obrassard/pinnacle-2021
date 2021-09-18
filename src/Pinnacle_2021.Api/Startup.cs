@@ -40,6 +40,7 @@ namespace Pinnacle_2021.Api
 		private void ConfigureDomainServices(IServiceCollection services)
 		{
 			services.AddScoped<IUserService, UserService>();
+			services.AddScoped<IInventoryService, InventoryService>();
 		}
 
 		#region Configure

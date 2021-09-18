@@ -18,6 +18,10 @@ namespace Pinnacle_2021.Api.Profiles
 					dest => dest.CompleteName,
 					opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}")
 				);
+
+
+			CreateMap<InventoryForCreation, Inventory>();
+			CreateMap<Inventory, InventoryCreationResponse>();
 		}
 	}
 }

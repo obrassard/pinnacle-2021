@@ -13,6 +13,7 @@ namespace Pinnacle_2021.Api.Entities
 		public string Title { get; set; }
 		public int QuantityInPackage { get; set; }
 		public string Image { get; set; }
+		public int? TTL { get; set; }
 
 		public Guid? ChildItemId { get; set; }
 

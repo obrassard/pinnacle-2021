@@ -142,6 +142,9 @@ namespace Pinnacle_2021.Api.Services.Domain
 			invItem.InventoryId = inventoryId;
 			invItem.ItemId = item.Id;
 
+			if (!invItem.Expiration.HasValue && item.TTL.HasValue)
+				invItem.Expiration = DateTime.UtcNow.AddDays(item.TTL.Value);
+
 			await Context.InventoryItems.AddAsync(invItem);
 			await Context.SaveChangesAsync();
 

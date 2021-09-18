@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 using Flurl;
 using Flurl.Http;
 
-using Pinnacle_2021.Contracts.Responses.Recipe;
+using Microsoft.Extensions.Configuration;
 
-
-using System.Globalization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+
 using OneOf;
+
+using Pinnacle_2021.Contracts.Responses.Recipe;
 
 namespace Pinnacle_2021.Api.Services.Domain.Recipe
 {
@@ -31,7 +29,7 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 			{
 				var temp = _config.GetSection("RecipeApi")["app_key"];
 
-				var response = await "https://api.edamam.com/api/recipes/v2".SetQueryParams(
+				return (await "https://api.edamam.com/api/recipes/v2".SetQueryParams(
 					new
 					{
 						app_key = _config.GetSection("RecipeApi")["app_key"],
@@ -39,34 +37,21 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 						q = ingredients,
 						type = "public"
 					}
-				).GetJsonAsync<AllRecipeInfo>();
-
-				//Trop noob pour auto-mapper
-				var recipeList = new List<RecipeResponse>();
-				
-				foreach (var hit in response.Hits)
-				{
-					recipeList.Add(new RecipeResponse(hit.Recipe.Label, hit.Recipe.Image, hit.Recipe.Url, (int)hit.Recipe.Calories, hit.Recipe.MealType));
-				}
-
-				return recipeList;
-
-			} catch (FlurlHttpException ex)
+				).GetJsonAsync<AllRecipeInfo>()).Hits
+					.Select(r => new RecipeResponse(r.Recipe.Label, r.Recipe.Image, r.Recipe.Url, (int)r.Recipe.Calories, r.Recipe.MealType, r.Recipe.DishType)).ToList();
+			}
+			catch (FlurlHttpException ex)
 			{
 				var error = await ex.GetResponseStringAsync();
 
 				return error;
 			}
-
-
-
-			
 		}
 	}
 
 
 
-    public partial class AllRecipeInfo
+	public partial class AllRecipeInfo
 	{
 		//[JsonProperty("from")]
 		//public long From { get; set; }
@@ -151,8 +136,8 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 		[JsonProperty("mealType")]
 		public string[] MealType { get; set; }
 
-		//[JsonProperty("dishType")]
-		//public string[] DishType { get; set; }
+		[JsonProperty("dishType")]
+		public string[] DishType { get; set; }
 
 		//[JsonProperty("totalNutrients")]
 		//public TotalDaily TotalNutrients { get; set; }

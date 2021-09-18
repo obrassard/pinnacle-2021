@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Pinnacle_2021.Api.DAL;
 
 namespace Pinnacle_2021.Api.Migrations
 {
     [DbContext(typeof(PinnacleContext))]
-    partial class PinnacleContextModelSnapshot : ModelSnapshot
+    [Migration("20210918220302_TTL")]
+    partial class TTL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

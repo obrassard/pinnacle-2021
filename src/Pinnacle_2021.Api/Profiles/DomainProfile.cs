@@ -22,6 +22,8 @@ namespace Pinnacle_2021.Api.Profiles
 
 			CreateMap<InventoryForCreation, Inventory>();
 			CreateMap<Inventory, InventoryCreationResponse>();
+
+			CreateMap<Item, ItemResponse>();
 		}
 	}
 }

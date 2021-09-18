@@ -23,7 +23,7 @@ namespace Pinnacle_2021.Api.DAL
 			// Items
 			modelBuilder.Entity<Item>(entity =>
 			{
-				entity.Property(i => i.QuantityInPackage).HasDefaultValue(1);
+				entity.Property(i => i.QuantityInPackage).HasDefaultValue(0);
 			});
 
 			modelBuilder.Entity<InventoryItem>(entity =>

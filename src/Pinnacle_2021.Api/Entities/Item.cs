@@ -12,6 +12,8 @@ namespace Pinnacle_2021.Api.Entities
 		public string? UPC { get; set; }
 		public string Title { get; set; }
 		public int QuantityInPackage { get; set; }
+		public string Image { get; set; }
+
 		public Guid? ChildItemId { get; set; }
 
 		#region

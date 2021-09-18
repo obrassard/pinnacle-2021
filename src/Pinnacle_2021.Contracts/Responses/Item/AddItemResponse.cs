@@ -2,5 +2,7 @@
 {
 	public record AddItemResponse : CreationResponse
 	{
+		public string Title { get; set; }
+		public string Image { get; set; }
 	}
 }

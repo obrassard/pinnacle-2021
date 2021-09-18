@@ -20,22 +20,16 @@ namespace Pinnacle_2021.Api.Controllers
 			_itemService = itemService;
 		}
 
-		#region Get
-
-		[HttpGet(ApiRoutes.Items.GET)]
-		public async Task<ActionResult<ItemResponse>> Get([FromQuery] string upc)
-		{
-			return Ok(await _itemService.Get(upc));
-		}
-
-		#endregion
-
 		#region Post
 
 		[HttpPost(ApiRoutes.Items.ADD_TO_INVENTORY)]
-		public async Task<IActionResult> AddToInventory(Guid inventoryId, AddItemRequest addItemRequest)
+		public async Task<ActionResult<AddItemResponse>> AddToInventory(Guid inventoryId, AddItemRequest addItemRequest)
 		{
-			return CreatedAtAction(null, null, await _itemService.Create(inventoryId, addItemRequest));
+			var oneOfResponse = await _itemService.Create(inventoryId, addItemRequest);
+			return oneOfResponse.Match<ActionResult<AddItemResponse>>(
+				addItemResponse => CreatedAtAction(null, null, addItemResponse),
+				notFound => NotFound()
+			);
 		}
 
 		#endregion

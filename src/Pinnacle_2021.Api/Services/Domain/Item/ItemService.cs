@@ -37,6 +37,26 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		#region Get
 
+		public async Task<ItemDetailResponse> GetItem(Guid inventoryId, Guid itemId)
+		{
+			return await Context.Items.Where(i => i.Id == itemId)
+							.Select(i => new ItemDetailResponse
+							{
+								ItemId = i.Id,
+								Image = i.Image,
+								Title = i.Title,
+								Inventory = i.InventorieItems
+												.Where(ii => ii.InventoryId == inventoryId && ii.Quantity > 0)
+												.Select(ii => new InventoryItemDetail
+												{
+													AddedAt = ii.CreatedAt,
+													Expiration = ii.Expiration,
+													InvItemID = ii.Id,
+													Quantity = ii.Quantity
+												})
+							}).FirstOrDefaultAsync();
+		}
+
 		//Get Or Create Items
 		private async Task<Item> GetByUpc(string upc)
 		{

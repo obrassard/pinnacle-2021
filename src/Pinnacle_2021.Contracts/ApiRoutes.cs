@@ -31,7 +31,7 @@
 			public const string KEY = "itemId";
 			public const string INVENTORY_ITEM_ID = "inventoryItemId";
 
-			public const string GET_BY_ID = BASE_ROUTE + "/{" + KEY + "}";
+			public const string GET_BY_ID = Inventories.GET_BY_ID + "/items" + "/{" + KEY + "}";
 
 			public const string ADD_TO_INVENTORY = Inventories.GET_BY_ID + "/items";
 			public const string CONSUME = BASE_ROUTE + "/{" + INVENTORY_ITEM_ID + "}";

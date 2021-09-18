@@ -19,12 +19,27 @@ namespace Pinnacle_2021.Api.Controllers
 			_userService = userService;
 		}
 
+		#region Ge
+
+		[HttpGet(ApiRoutes.Users.GET)]
+		public async Task<ActionResult<UserResponse>> Create([FromQuery] string email)
+		{
+			var oneOfResponse = await _userService.Get(email);
+			return oneOfResponse.Match<ActionResult<UserResponse>>(
+				userResponse => Ok(userResponse),
+				notFound => NotFound()
+			);
+		}
+
+		#endregion
+
 		#region Post
 
 		[HttpPost(ApiRoutes.Users.CREATE)]
 		public async Task<ActionResult<UserCreationResponse>> Create(UserForCreation userForCreation)
 		{
-			return await _userService.Create(userForCreation);
+			var response = await _userService.Create(userForCreation);
+			return CreatedAtAction(null, null, response);
 		}
 
 		#endregion

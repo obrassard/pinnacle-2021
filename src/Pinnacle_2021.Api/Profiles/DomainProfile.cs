@@ -13,6 +13,11 @@ namespace Pinnacle_2021.Api.Profiles
 		{
 			CreateMap<UserForCreation, User>();
 			CreateMap<User, UserCreationResponse>();
+			CreateMap<User, UserResponse>()
+				.ForMember(
+					dest => dest.CompleteName,
+					opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}")
+				);
 		}
 	}
 }

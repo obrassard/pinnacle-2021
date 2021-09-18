@@ -7,6 +7,8 @@
 		public static class Users
 		{
 			public const string BASE_ROUTE = ROOT + "/users";
+
+			public const string GET = BASE_ROUTE;
 			public const string CREATE = BASE_ROUTE;
 		}
 	}

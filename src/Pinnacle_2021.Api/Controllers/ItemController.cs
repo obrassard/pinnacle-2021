@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 
 using Pinnacle_2021.Api.Services.Domain;
 using Pinnacle_2021.Contracts;
+using Pinnacle_2021.Contracts.Requests;
 using Pinnacle_2021.Contracts.Responses;
 
 namespace Pinnacle_2021.Api.Controllers
@@ -24,6 +26,16 @@ namespace Pinnacle_2021.Api.Controllers
 		public async Task<ActionResult<ItemResponse>> Get([FromQuery] string upc)
 		{
 			return Ok(await _itemService.Get(upc));
+		}
+
+		#endregion
+
+		#region Post
+
+		[HttpPost(ApiRoutes.Items.ADD_TO_INVENTORY)]
+		public async Task<IActionResult> AddToInventory(Guid inventoryId, AddItemRequest addItemRequest)
+		{
+			return CreatedAtAction(null, null, await _itemService.Create(inventoryId, addItemRequest));
 		}
 
 		#endregion

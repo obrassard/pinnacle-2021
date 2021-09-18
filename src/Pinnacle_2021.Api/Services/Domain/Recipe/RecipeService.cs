@@ -115,8 +115,8 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 		//[JsonProperty("source")]
 		//public string Source { get; set; }
 
-		//[JsonProperty("url")]
-		//public string Url { get; set; }
+		[JsonProperty("url")]
+		public string Url { get; set; }
 
 		//[JsonProperty("shareAs")]
 		//public string ShareAs { get; set; }
@@ -139,8 +139,8 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 		//[JsonProperty("ingredients")]
 		//public Ingredient[] Ingredients { get; set; }
 
-		//[JsonProperty("calories")]
-		//public long Calories { get; set; }
+		[JsonProperty("calories")]
+		public long Calories { get; set; }
 
 		//[JsonProperty("totalWeight")]
 		//public long TotalWeight { get; set; }
@@ -148,8 +148,8 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 		//[JsonProperty("cuisineType")]
 		//public string[] CuisineType { get; set; }
 
-		//[JsonProperty("mealType")]
-		//public string[] MealType { get; set; }
+		[JsonProperty("mealType")]
+		public string[] MealType { get; set; }
 
 		//[JsonProperty("dishType")]
 		//public string[] DishType { get; set; }

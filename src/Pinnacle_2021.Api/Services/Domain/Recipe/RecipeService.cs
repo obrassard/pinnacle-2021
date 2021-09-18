@@ -13,6 +13,7 @@ using Pinnacle_2021.Contracts.Responses.Recipe;
 using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using OneOf;
 
 namespace Pinnacle_2021.Api.Services.Domain.Recipe
 {
@@ -24,7 +25,7 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 		{
 			_config = configuration;
 		}
-		public async Task<IEnumerable<RecipeResponse>> GetRecipeFromIngredients(string ingredients)
+		public async Task<OneOf<IEnumerable<RecipeResponse>, string>> GetRecipeFromIngredients(string ingredients)
 		{
 			try
 			{
@@ -54,7 +55,7 @@ namespace Pinnacle_2021.Api.Services.Domain.Recipe
 			{
 				var error = await ex.GetResponseStringAsync();
 
-				return Enumerable.Empty<RecipeResponse>();
+				return error;
 			}
 
 

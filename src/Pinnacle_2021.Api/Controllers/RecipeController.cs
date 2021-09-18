@@ -26,9 +26,12 @@ namespace Pinnacle_2021.Api.Controllers
 		[HttpGet(ApiRoutes.Recipe.GET)]
 		public async Task<ActionResult<IEnumerable<RecipeResponse>>> Get(string ingredients)
 		{
-			var response = await _recipeService.GetRecipeFromIngredients(ingredients);
+			var oneOfResponse = await _recipeService.GetRecipeFromIngredients(ingredients);
 
-			return Ok(response);
+			return oneOfResponse.Match<ActionResult<IEnumerable<RecipeResponse>>>(
+				recipeResponse => Ok(recipeResponse),
+				error => Ok(error)
+			);
 		}
 	}
 }

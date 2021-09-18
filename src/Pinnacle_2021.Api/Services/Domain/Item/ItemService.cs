@@ -95,6 +95,11 @@ namespace Pinnacle_2021.Api.Services.Domain
 			return item;
 		}
 
+		private async Task<InventoryItem> GetItem(Guid inventoryItemId)
+		{
+			return await Context.InventoryItems.FindAsync(inventoryItemId);
+		}
+
 		#endregion
 
 		#region Post
@@ -130,6 +135,17 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		#endregion
 
+		#region Patch
+
+		public async Task ChangeQuantity(Guid inventoryItemId, ChangeQuantityRequest changeQuantityRequest)
+		{
+			var invItem = await GetItem(inventoryItemId);
+			invItem.Quantity = changeQuantityRequest.Quantity;
+			await Context.SaveChangesAsync();
+		}
+
+		#endregion
+
 		#region Delete
 
 		public async Task Consume(Guid inventoryItemId, ConsumeItemRequest consumeRequest)
@@ -144,11 +160,6 @@ namespace Pinnacle_2021.Api.Services.Domain
 				inventoryItem.Quantity = 0;
 			}
 			await Context.SaveChangesAsync();
-		}
-
-		private async Task<InventoryItem> GetItem(Guid inventoryItemId)
-		{
-			return await Context.InventoryItems.FindAsync(inventoryItemId);
 		}
 
 		#endregion

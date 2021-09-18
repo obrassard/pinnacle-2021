@@ -32,6 +32,21 @@ namespace Pinnacle_2021.Api.Controllers
 			);
 		}
 
+		#endregion
+
+		#region Patch
+
+		[HttpPatch(ApiRoutes.Items.CHANGE_QTY)]
+		public async Task<IActionResult> ChangeQty(Guid inventoryItemId, ChangeQuantityRequest changeQuantityRequest)
+		{
+			await _itemService.ChangeQuantity(inventoryItemId, changeQuantityRequest);
+			return NoContent();
+		}
+		#endregion
+
+
+		#region Delete
+
 		[HttpDelete(ApiRoutes.Items.CONSUME)]
 		public async Task<IActionResult> ConsumeItem(Guid inventoryItemId, ConsumeItemRequest consumeRequest)
 		{

@@ -44,6 +44,7 @@ namespace Pinnacle_2021.Api
 			services.AddScoped<IItemService, ItemService>();
 
 			services.AddSingleton<IUpcApiClient, UpcApiClient>();
+			services.AddSingleton<IImageApiClient, ImageApiClient>();
 		}
 
 		#region Configure

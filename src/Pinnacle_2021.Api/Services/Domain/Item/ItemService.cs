@@ -8,6 +8,7 @@ using AutoMapper;
 using HtmlAgilityPack;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 using OneOf;
 
@@ -18,28 +19,67 @@ using Pinnacle_2021.Api.Services.System;
 using Pinnacle_2021.Contracts.Requests;
 using Pinnacle_2021.Contracts.Responses;
 
+using Unsplash;
+
 namespace Pinnacle_2021.Api.Services.Domain
 {
 	public class ItemService : BaseDomainService, IItemService
 	{
 		private readonly IUpcApiClient _upcApiClient;
+		private readonly IImageApiClient _imageApiClient;
 
-		public ItemService(IMapper mapper, PinnacleContext context, IUpcApiClient upcApiClient)
+		public ItemService(IMapper mapper, PinnacleContext context, IUpcApiClient upcApiClient, IImageApiClient imageApiClient)
 			: base(mapper, context)
 		{
 			_upcApiClient = upcApiClient;
+			_imageApiClient = imageApiClient;
 		}
 
 		#region Get
 
-		private async Task<Item> Get(string upc)
+		//Get Or Create Items
+		private async Task<Item> GetByUpc(string upc)
 		{
 			return await Context.Items.Where(i => i.UPC == upc).FirstOrDefaultAsync();
 		}
 
-		private async Task<OneOf<Item, EntityNotFound>> GetOrCreateItem(string upc)
+		private async Task<Item> GetByTitle(string title)
 		{
-			var item = await Get(upc);
+			return await Context.Items.Where(i => i.Title.ToLower() == title.ToLower().Trim())
+									  .FirstOrDefaultAsync();
+		}
+
+		private async Task<OneOf<Item, EntityNotFound>> GetOrCreateItem(AddItemRequest itemRequest)
+		{
+			OneOf<Item, EntityNotFound> oneOfResponse;
+			if (!string.IsNullOrEmpty(itemRequest.Upc))
+				oneOfResponse = await GetOrCreateItemByUpc(itemRequest.Upc);
+			else
+				oneOfResponse = await GetOrCreateItemByName(itemRequest.Title!);
+			return oneOfResponse;
+		}
+
+		private async Task<OneOf<Item, EntityNotFound>> GetOrCreateItemByName(string title)
+		{
+			var item = await GetByTitle(title);
+			if (item == null)
+			{
+				try
+				{
+					item = await _imageApiClient.GetImage(title);
+					await CreateItem(item);
+				}
+				catch (Exception)
+				{
+					return new EntityNotFound();
+				}
+			}
+			return item;
+		}
+
+		private async Task<OneOf<Item, EntityNotFound>> GetOrCreateItemByUpc(string upc)
+		{
+			var item = await GetByUpc(upc);
 			if (item == null)
 			{
 				try
@@ -67,7 +107,8 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		public async Task<OneOf<AddItemResponse, EntityNotFound>> Create(Guid inventoryId, AddItemRequest itemRequest)
 		{
-			var oneOfResponse = await GetOrCreateItem(itemRequest.Upc);
+			var oneOfResponse = await GetOrCreateItem(itemRequest);
+
 			if (oneOfResponse.IsT1)
 				return oneOfResponse.AsT1;
 
@@ -86,6 +127,8 @@ namespace Pinnacle_2021.Api.Services.Domain
 				Title = item.Title
 			};
 		}
+
+
 
 		#endregion
 	}
@@ -109,5 +152,35 @@ namespace Pinnacle_2021.Api.Services.Domain
 				Image = imgSrc
 			};
 		}
+	}
+
+	public class ImageApiClient : IImageApiClient
+	{
+		private readonly UnsplashClient _client;
+
+		public ImageApiClient(IConfiguration configuration)
+		{
+			_client = new UnsplashClient(new ClientOptions
+			{
+				AccessKey = configuration["Unsplash:ApiKey"]
+			});
+		}
+
+		public async Task<Item> GetImage(string title)
+		{
+
+			var img = await _client.Search.PhotosAsync(title);
+
+			return new Item
+			{
+				Title = title,
+				Image = img.Results.First().Urls.Regular
+			};
+		}
+	}
+
+	public interface IImageApiClient
+	{
+		Task<Item> GetImage(string title);
 	}
 }

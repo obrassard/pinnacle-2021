@@ -13,6 +13,11 @@
 			public const string CREATE = BASE_ROUTE;
 		}
 
+		public static class Items
+		{
+			public const string GET = ROOT + "/items";
+		}
+
 		public static class Users
 		{
 			public const string BASE_ROUTE = ROOT + SEGMENT;

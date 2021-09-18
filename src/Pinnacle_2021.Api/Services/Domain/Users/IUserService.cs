@@ -10,7 +10,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 {
 	public interface IUserService
 	{
-		Task<UserCreationResponse> Create(UserForCreation userRequest);
+		Task<UserResponse> Create(UserForCreation userRequest);
 		Task<OneOf<UserResponse, EntityNotFound>> Get(string email);
 	}
 }

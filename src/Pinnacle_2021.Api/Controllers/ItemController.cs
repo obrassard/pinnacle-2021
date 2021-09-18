@@ -32,6 +32,13 @@ namespace Pinnacle_2021.Api.Controllers
 			);
 		}
 
+		[HttpDelete(ApiRoutes.Items.CONSUME)]
+		public async Task<IActionResult> ConsumeItem(Guid inventoryItemId, ConsumeItemRequest consumeRequest)
+		{
+			await _itemService.Consume(inventoryItemId, consumeRequest);
+			return NoContent();
+		}
+
 		#endregion
 	}
 }

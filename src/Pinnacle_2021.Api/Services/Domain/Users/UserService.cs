@@ -39,13 +39,13 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		#region Post
 
-		public async Task<UserCreationResponse> Create(UserForCreation userRequest)
+		public async Task<UserResponse> Create(UserForCreation userRequest)
 		{
 			var user = Mapper.Map<User>(userRequest);
 			await Context.Users.AddAsync(user);
 			await Context.SaveChangesAsync();
 
-			return Mapper.Map<UserCreationResponse>(user);
+			return Mapper.Map<UserResponse>(user);
 		}
 
 		#endregion

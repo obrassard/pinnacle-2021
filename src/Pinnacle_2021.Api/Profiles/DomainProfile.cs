@@ -12,7 +12,6 @@ namespace Pinnacle_2021.Api.Profiles
 		public DomainProfile()
 		{
 			CreateMap<UserForCreation, User>();
-			CreateMap<User, UserCreationResponse>();
 			CreateMap<User, UserResponse>()
 				.ForMember(
 					dest => dest.CompleteName,

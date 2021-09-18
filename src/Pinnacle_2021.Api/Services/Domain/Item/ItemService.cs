@@ -128,11 +128,33 @@ namespace Pinnacle_2021.Api.Services.Domain
 			};
 		}
 
+		#endregion
 
+		#region Delete
+
+		public async Task Consume(Guid inventoryItemId, ConsumeItemRequest consumeRequest)
+		{
+			var inventoryItem = await GetItem(inventoryItemId);
+			if (inventoryItem.Quantity > consumeRequest.Quantity)
+			{
+				inventoryItem.Quantity -= consumeRequest.Quantity;
+			}
+			else
+			{
+				inventoryItem.Quantity = 0;
+			}
+			await Context.SaveChangesAsync();
+		}
+
+		private async Task<InventoryItem> GetItem(Guid inventoryItemId)
+		{
+			return await Context.InventoryItems.FindAsync(inventoryItemId);
+		}
 
 		#endregion
 	}
 
+	#region APIs
 	public class UpcApiClient : IUpcApiClient
 	{
 		public Item ScrapeUPCData(string upcCode)
@@ -183,4 +205,5 @@ namespace Pinnacle_2021.Api.Services.Domain
 	{
 		Task<Item> GetImage(string title);
 	}
+	#endregion
 }

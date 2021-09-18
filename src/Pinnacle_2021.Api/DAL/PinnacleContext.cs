@@ -29,7 +29,6 @@ namespace Pinnacle_2021.Api.DAL
 			modelBuilder.Entity<InventoryItem>(entity =>
 			{
 				entity.Property(i => i.Quantity).HasDefaultValue(1);
-				entity.Property(i => i.Consumed).HasDefaultValue(false);
 			});
 
 			base.OnModelCreating(modelBuilder);

@@ -19,10 +19,14 @@
 
 		public static class Items
 		{
-			public const string GET = ROOT + "/items";
+			public const string BASE_ROUTE = ROOT + "/items";
+			public const string KEY = "itemId";
+			public const string INVENTORY_ITEM_ID = "inventoryItemId";
+
+			public const string GET_BY_ID = BASE_ROUTE + "/{" + KEY + "}";
+
 			public const string ADD_TO_INVENTORY = Inventories.GET_BY_ID + "/items";
-
-
+			public const string CONSUME = BASE_ROUTE + "/{" + INVENTORY_ITEM_ID + "}";
 		}
 
 		public static class Users

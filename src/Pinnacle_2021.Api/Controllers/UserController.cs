@@ -36,7 +36,7 @@ namespace Pinnacle_2021.Api.Controllers
 		#region Post
 
 		[HttpPost(ApiRoutes.Users.CREATE)]
-		public async Task<ActionResult<UserCreationResponse>> Create(UserForCreation userForCreation)
+		public async Task<ActionResult<UserResponse>> Create(UserForCreation userForCreation)
 		{
 			var response = await _userService.Create(userForCreation);
 			return CreatedAtAction(null, null, response);

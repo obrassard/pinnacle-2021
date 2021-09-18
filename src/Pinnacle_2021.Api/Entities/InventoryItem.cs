@@ -12,7 +12,6 @@ namespace Pinnacle_2021.Api.Entities
 		public Guid ItemId { get; set; }
 		public int Quantity { get; set; }
 
-		public bool Consumed { get; set; }
 		public DateTime? Expiration { get; set; }
 
 		#region

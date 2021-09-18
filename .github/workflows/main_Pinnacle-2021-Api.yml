@@ -35,7 +35,6 @@ jobs:
       with:
         name: .net-app
         path: ${{env.DOTNET_ROOT}}/myapp
-      working-directory: src/Pinnacle_2021.Api
 
   deploy:
     runs-on: windows-latest

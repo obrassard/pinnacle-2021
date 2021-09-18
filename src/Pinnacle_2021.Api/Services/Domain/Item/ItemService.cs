@@ -22,7 +22,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		public async Task<ItemResponse> Get(string upc)
 		{
-			var item = await Context.Items.Where(i => i.UPC.ToLower() == upc.ToLower()).FirstOrDefaultAsync();
+			var item = await Context.Items.Where(i => i.UPC == upc).FirstOrDefaultAsync();
 			return Mapper.Map<ItemResponse>(item);
 			//TODO: Get and Create from external API.
 		}

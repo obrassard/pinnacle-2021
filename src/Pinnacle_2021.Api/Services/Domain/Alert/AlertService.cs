@@ -33,8 +33,8 @@ namespace Pinnacle_2021.Api.Services.Domain
 				.Where(u => !string.IsNullOrEmpty(u.PhoneNumber) &&
 								u.Inventories.Any(i =>
 									i.InventoryItems.Any(u =>
-										u.Expiration.HasValue &&
-										DateTime.UtcNow >= u.Expiration.Value.AddDays(3))
+										u.Expiration.HasValue && u.Quantity > 0 &&
+										DateTime.UtcNow.AddDays(3) >= u.Expiration.Value)
 									)
 								)
 				.Select(u => new
@@ -42,14 +42,14 @@ namespace Pinnacle_2021.Api.Services.Domain
 					PhoneNumber = u.PhoneNumber,
 					InvalidProducts = u.Inventories
 										.Where(inv => inv.InventoryItems.Any(
-														ii => ii.Expiration.HasValue &&
-														DateTime.UtcNow >= ii.Expiration.Value.AddDays(3)))
+														ii => ii.Expiration.HasValue && ii.Quantity > 0 &&
+														DateTime.UtcNow.AddDays(3) >= ii.Expiration.Value))
 										.Select(inv => new
 										{
 											Title = inv.Title,
 											Items = inv.InventoryItems
-														.Where(i => i.Expiration.HasValue &&
-															DateTime.UtcNow >= i.Expiration.Value.AddDays(3))
+														.Where(i => i.Expiration.HasValue && i.Quantity > 0 &&
+															DateTime.UtcNow.AddDays(3) >= i.Expiration.Value)
 														.Select(ii => new
 														{
 															ii.Item.Title,

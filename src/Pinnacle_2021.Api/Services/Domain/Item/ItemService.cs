@@ -57,7 +57,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 													Expiration = ii.Expiration,
 													InvItemID = ii.Id,
 													Quantity = ii.Quantity,
-													ExpiredSoon = ii.Expiration.HasValue && DateTime.UtcNow >= ii.Expiration.Value.AddDays(3)
+													ExpiredSoon = ii.Expiration.HasValue && DateTime.UtcNow.AddDays(3) >= ii.Expiration.Value
 												})
 							}).FirstOrDefaultAsync();
 		}

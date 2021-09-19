@@ -1,6 +1,8 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -9,6 +11,8 @@ using HtmlAgilityPack;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+
+using Newtonsoft.Json;
 
 using OneOf;
 
@@ -104,7 +108,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 			{
 				try
 				{
-					item = _upcApiClient.ScrapeUPCData(upc);
+					item = await _upcApiClient.ScrapeUPCData(upc);
 					await CreateItem(item);
 				}
 				catch (Exception)
@@ -196,14 +200,21 @@ namespace Pinnacle_2021.Api.Services.Domain
 	#region APIs
 	public class UpcApiClient : IUpcApiClient
 	{
-		public Item ScrapeUPCData(string upcCode)
+		private readonly IImageApiClient _imageApiClient;
+
+		public UpcApiClient(IImageApiClient imageApiClient)
+		{
+			_imageApiClient = imageApiClient;
+		}
+
+		public async Task<Item> ScrapeUPCData(string upcCode)
 		{
 			HtmlWeb web = new();
 			HtmlDocument doc = web.Load($"https://www.upcitemdb.com/upc/{upcCode}");
 
 
 			var name = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/div[1]/div[3]/div/ol/li[1]").InnerText;
-			var imgSrc = doc.DocumentNode.SelectSingleNode("/html/body/div[1]/div/div[1]/div[1]/img").Attributes["src"].Value;
+			var imgSrc = await _imageApiClient.GetImageUrl(name);
 
 
 			return new Item
@@ -219,12 +230,42 @@ namespace Pinnacle_2021.Api.Services.Domain
 	{
 		private readonly UnsplashClient _client;
 
+		public HttpClient _bingClient { get; }
+		public string _baseUri { get; }
+
 		public ImageApiClient(IConfiguration configuration)
 		{
 			_client = new UnsplashClient(new ClientOptions
 			{
 				AccessKey = configuration["Unsplash:ApiKey"]
 			});
+
+			string subscriptionKey = configuration["BingSearchApiKey"];
+			_bingClient = new HttpClient();
+
+			// Request headers. The subscription key is the only required header but you should
+			// include User-Agent (especially for mobile), X-MSEdge-ClientID, X-Search-Location
+			// and X-MSEdge-ClientIP (especially for local aware queries).
+
+			_bingClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", subscriptionKey);
+
+			_baseUri = "https://api.bing.microsoft.com/v7.0/images/search";
+		}
+
+		public async Task<string> GetImageUrl(string title)
+		{
+			try
+			{
+				var item = await _bingClient.GetAsync(_baseUri + "?q=" + title);
+				var body = await item.Content.ReadAsStringAsync();
+				var result = JsonConvert.DeserializeObject<ImageResponse>(body);
+				return result.Value.First().ThumbnailUrl;
+			}
+			catch (Exception)
+			{
+				Console.WriteLine("An error occured in GetImageUrl");
+				return "";
+			}
 		}
 
 		public async Task<Item> GetImage(string title)
@@ -240,9 +281,22 @@ namespace Pinnacle_2021.Api.Services.Domain
 		}
 	}
 
+	public record ImageResponse
+	{
+		[JsonProperty("value")]
+		public List<ImageResponseItem> Value { get; set; }
+	}
+
+	public record ImageResponseItem
+	{
+		[JsonProperty("thumbnailUrl")]
+		public string ThumbnailUrl { get; set; }
+	}
+
 	public interface IImageApiClient
 	{
 		Task<Item> GetImage(string title);
+		Task<string> GetImageUrl(string title);
 	}
 	#endregion
 }

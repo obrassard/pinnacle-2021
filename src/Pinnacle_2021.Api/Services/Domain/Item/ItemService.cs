@@ -59,7 +59,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 													Quantity = ii.Quantity,
 													ExpiredSoon = ii.Expiration.HasValue && DateTime.UtcNow.AddDays(3) >= ii.Expiration.Value
 												})
-							}).FirstOrDefaultAsync();
+							}).OrderBy(t => !t.Inventory.Any(t => t.ExpiredSoon)).ThenBy(t => t.Title).FirstOrDefaultAsync();
 		}
 
 		//Get Or Create Items

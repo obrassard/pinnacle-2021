@@ -47,7 +47,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 												ExpiredSoon = ii.InventorieItems.Any(i => i.InventoryId == inventoryId && i.Expiration.HasValue && DateTime.UtcNow.AddDays(3) >= i.Expiration.Value),
 												Count = ii.InventorieItems.Count(i => i.InventoryId == inventoryId),
 												Quantity = ii.InventorieItems.Where(i => i.InventoryId == inventoryId).Sum(i => i.Quantity)
-											}).ToListAsync();
+											}).OrderByDescending(t => t.ExpiredSoon).ThenBy(t => t.Title).ToListAsync();
 
 			return new InventoryDetailResponse
 			{

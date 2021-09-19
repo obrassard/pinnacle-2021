@@ -185,9 +185,9 @@ namespace Pinnacle_2021.Api.Services.Domain
 		{
 			InventoryItem inventoryItem = null;
 			if (!string.IsNullOrEmpty(consumeRequest.Upc))
-				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryId && ii.Item.UPC == consumeRequest.Upc).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
+				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryId && ii.Item.UPC == consumeRequest.Upc && ii.Quantity > 0).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
 			else
-				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryId && ii.Item.Title.ToLower() == consumeRequest.Title!.ToLower().Trim()).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
+				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryId && ii.Item.Title.ToLower() == consumeRequest.Title!.ToLower().Trim() && ii.Quantity > 0).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
 
 			if (inventoryItem == null)
 				return null;

@@ -56,7 +56,8 @@ namespace Pinnacle_2021.Api.Services.Domain
 													AddedAt = ii.CreatedAt,
 													Expiration = ii.Expiration,
 													InvItemID = ii.Id,
-													Quantity = ii.Quantity
+													Quantity = ii.Quantity,
+													ExpiredSoon = ii.Expiration.HasValue && DateTime.UtcNow >= ii.Expiration.Value.AddDays(3)
 												})
 							}).FirstOrDefaultAsync();
 		}
@@ -134,7 +135,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 			await Context.SaveChangesAsync();
 		}
 
-		public async Task<OneOf<AddItemResponse, EntityNotFound>> Create(Guid inventoryId, AddItemRequest itemRequest)
+		public async Task<OneOf<AddOrConsumeItemResponse, EntityNotFound>> Create(Guid inventoryId, AddItemRequest itemRequest)
 		{
 			var oneOfResponse = await GetOrCreateItem(itemRequest);
 
@@ -152,7 +153,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 			await Context.InventoryItems.AddAsync(invItem);
 			await Context.SaveChangesAsync();
 
-			return new AddItemResponse
+			return new AddOrConsumeItemResponse
 			{
 				Id = invItem.Id,
 				Image = item.Image,
@@ -180,7 +181,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		#region Delete
 
-		public async Task Consume(Guid inventoryId, ConsumeItemRequest consumeRequest)
+		public async Task<AddOrConsumeItemResponse> Consume(Guid inventoryId, ConsumeItemRequest consumeRequest)
 		{
 			InventoryItem inventoryItem = null;
 			if (!string.IsNullOrEmpty(consumeRequest.Upc))
@@ -189,7 +190,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryId && ii.Item.Title.ToLower() == consumeRequest.Title!.ToLower().Trim()).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
 
 			if (inventoryItem == null)
-				return;
+				return null;
 
 			if (inventoryItem.Quantity > consumeRequest.Quantity)
 			{
@@ -200,6 +201,14 @@ namespace Pinnacle_2021.Api.Services.Domain
 				inventoryItem.Quantity = 0;
 			}
 			await Context.SaveChangesAsync();
+
+			var item = Context.Items.Find(inventoryItem.ItemId);
+			return new AddOrConsumeItemResponse
+			{
+				Id = Guid.NewGuid(),
+				Image = item.Image,
+				Title = item.Title
+			};
 		}
 
 		#endregion

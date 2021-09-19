@@ -11,8 +11,8 @@ namespace Pinnacle_2021.Api.Services.Domain
 {
 	public interface IItemService
 	{
-		Task<OneOf<AddItemResponse, EntityNotFound>> Create(Guid inventoryId, AddItemRequest itemRequest);
-		Task Consume(Guid inventoryItemId, ConsumeItemRequest consumeRequest);
+		Task<OneOf<AddOrConsumeItemResponse, EntityNotFound>> Create(Guid inventoryId, AddItemRequest itemRequest);
+		Task<AddOrConsumeItemResponse> Consume(Guid inventoryItemId, ConsumeItemRequest consumeRequest);
 		Task ChangeQuantity(Guid inventoryItemId, ChangeItemRequest changeQuantityRequest);
 		Task<ItemDetailResponse> GetItem(Guid inventoryId, Guid itemId);
 	}

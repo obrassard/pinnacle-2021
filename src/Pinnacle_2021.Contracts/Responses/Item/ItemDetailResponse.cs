@@ -29,5 +29,6 @@ namespace Pinnacle_2021.Contracts.Responses
 		public int Quantity { get; set; }
 		public DateTime AddedAt { get; set; }
 		public DateTime? Expiration { get; set; }
+		public bool ExpiredSoon { get; set; }
 	}
 }

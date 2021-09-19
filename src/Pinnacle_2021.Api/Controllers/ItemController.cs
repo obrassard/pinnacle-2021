@@ -33,10 +33,10 @@ namespace Pinnacle_2021.Api.Controllers
 		#region Post
 
 		[HttpPost(ApiRoutes.Items.ADD_TO_INVENTORY)]
-		public async Task<ActionResult<AddItemResponse>> AddToInventory(Guid inventoryId, AddItemRequest addItemRequest)
+		public async Task<ActionResult<AddOrConsumeItemResponse>> AddToInventory(Guid inventoryId, AddItemRequest addItemRequest)
 		{
 			var oneOfResponse = await _itemService.Create(inventoryId, addItemRequest);
-			return oneOfResponse.Match<ActionResult<AddItemResponse>>(
+			return oneOfResponse.Match<ActionResult<AddOrConsumeItemResponse>>(
 				addItemResponse => CreatedAtAction(null, null, addItemResponse),
 				notFound => NotFound()
 			);
@@ -60,8 +60,8 @@ namespace Pinnacle_2021.Api.Controllers
 		[HttpPatch(ApiRoutes.Items.CONSUME)]
 		public async Task<IActionResult> ConsumeItem(Guid inventoryId, ConsumeItemRequest consumeRequest)
 		{
-			await _itemService.Consume(inventoryId, consumeRequest);
-			return NoContent();
+			var result = await _itemService.Consume(inventoryId, consumeRequest);
+			return Ok(result);
 		}
 
 		#endregion

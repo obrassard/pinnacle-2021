@@ -180,13 +180,16 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		#region Delete
 
-		public async Task Consume(Guid inventoryItemId, ConsumeItemRequest consumeRequest)
+		public async Task Consume(Guid inventoryId, ConsumeItemRequest consumeRequest)
 		{
 			InventoryItem inventoryItem = null;
 			if (!string.IsNullOrEmpty(consumeRequest.Upc))
-				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryItemId && ii.Item.UPC == consumeRequest.Upc).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
+				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryId && ii.Item.UPC == consumeRequest.Upc).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
 			else
-				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryItemId && ii.Item.Title.ToLower() == consumeRequest.Title!.ToLower().Trim()).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
+				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryId && ii.Item.Title.ToLower() == consumeRequest.Title!.ToLower().Trim()).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
+
+			if (inventoryItem == null)
+				return;
 
 			if (inventoryItem.Quantity > consumeRequest.Quantity)
 			{

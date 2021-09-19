@@ -58,9 +58,9 @@ namespace Pinnacle_2021.Api.Controllers
 		#region Delete
 
 		[HttpPatch(ApiRoutes.Items.CONSUME)]
-		public async Task<IActionResult> ConsumeItem(Guid inventoryItemId, ConsumeItemRequest consumeRequest)
+		public async Task<IActionResult> ConsumeItem(Guid inventoryId, ConsumeItemRequest consumeRequest)
 		{
-			await _itemService.Consume(inventoryItemId, consumeRequest);
+			await _itemService.Consume(inventoryId, consumeRequest);
 			return NoContent();
 		}
 

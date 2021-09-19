@@ -292,7 +292,7 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 			return new Item
 			{
-				Title = title,
+				Title = title[0].ToString().ToUpper() + title.Substring(1),
 				Image = img.Results.First().Urls.Regular
 			};
 		}

@@ -182,7 +182,12 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		public async Task Consume(Guid inventoryItemId, ConsumeItemRequest consumeRequest)
 		{
-			var inventoryItem = await GetItem(inventoryItemId);
+			InventoryItem inventoryItem = null;
+			if (!string.IsNullOrEmpty(consumeRequest.Upc))
+				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryItemId && ii.Item.UPC == consumeRequest.Upc).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
+			else
+				inventoryItem = await Context.InventoryItems.Where(ii => ii.InventoryId == inventoryItemId && ii.Item.Title.ToLower() == consumeRequest.Title!.ToLower().Trim()).OrderBy(ii => ii.CreatedAt).FirstOrDefaultAsync();
+
 			if (inventoryItem.Quantity > consumeRequest.Quantity)
 			{
 				inventoryItem.Quantity -= consumeRequest.Quantity;

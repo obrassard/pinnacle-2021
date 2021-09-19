@@ -46,8 +46,8 @@ namespace Pinnacle_2021.Api.Controllers
 
 		#region Patch
 
-		[HttpPatch(ApiRoutes.Items.CHANGE_QTY)]
-		public async Task<IActionResult> ChangeQty(Guid inventoryItemId, ChangeQuantityRequest changeQuantityRequest)
+		[HttpPatch(ApiRoutes.Items.CHANGE)]
+		public async Task<IActionResult> Change(Guid inventoryItemId, ChangeItemRequest changeQuantityRequest)
 		{
 			await _itemService.ChangeQuantity(inventoryItemId, changeQuantityRequest);
 			return NoContent();

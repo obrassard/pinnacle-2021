@@ -35,7 +35,7 @@
 
 			public const string ADD_TO_INVENTORY = Inventories.GET_BY_ID + "/items";
 			public const string CONSUME = BASE_ROUTE + "/{" + INVENTORY_ITEM_ID + "}";
-			public const string CHANGE_QTY = BASE_ROUTE + "/{" + INVENTORY_ITEM_ID + "}";
+			public const string CHANGE = BASE_ROUTE + "/{" + INVENTORY_ITEM_ID + "}";
 		}
 
 		public static class Users

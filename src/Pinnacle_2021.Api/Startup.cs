@@ -42,6 +42,7 @@ namespace Pinnacle_2021.Api
 		{
 			services.AddScoped<IUserService, UserService>();
 			services.AddScoped<IInventoryService, InventoryService>();
+			services.AddScoped<IAlertService, AlertService>();
 			services.AddScoped<IItemService, ItemService>();
 
 			services.AddSingleton<IUpcApiClient, UpcApiClient>();

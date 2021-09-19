@@ -160,10 +160,15 @@ namespace Pinnacle_2021.Api.Services.Domain
 
 		#region Patch
 
-		public async Task ChangeQuantity(Guid inventoryItemId, ChangeQuantityRequest changeQuantityRequest)
+		public async Task ChangeQuantity(Guid inventoryItemId, ChangeItemRequest changeItemRequest)
 		{
 			var invItem = await GetItem(inventoryItemId);
-			invItem.Quantity = changeQuantityRequest.Quantity;
+			if (changeItemRequest.Quantity.HasValue)
+				invItem.Quantity = changeItemRequest.Quantity.Value;
+
+			if (changeItemRequest.Expiration.HasValue)
+				invItem.Expiration = changeItemRequest.Expiration;
+
 			await Context.SaveChangesAsync();
 		}
 

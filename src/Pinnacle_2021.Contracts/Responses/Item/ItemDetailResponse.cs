@@ -14,6 +14,7 @@ namespace Pinnacle_2021.Contracts.Responses
 	public record ItemListResponse : BaseItemResponse
 	{
 		public int Count { get; set; }
+		public bool ExpiredSoon { get; set; }
 	}
 
 	public record ItemDetailResponse : BaseItemResponse
